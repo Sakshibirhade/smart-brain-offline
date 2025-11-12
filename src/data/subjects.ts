@@ -44,6 +44,13 @@ Programming requires logical thinking and problem-solving skills.`,
 4. **Queues**: FIFO (First In, First Out)
 5. **Trees**: Hierarchical structures
 6. **Graphs**: Networks of connected nodes
+7. **Hash Tables**: Key-value pair storage with O(1) lookup
+8. **Heaps**: Specialized tree for priority queues
+
+## Time Complexity:
+- Array access: O(1)
+- Linked list traversal: O(n)
+- Binary search tree: O(log n)
 
 Understanding data structures is crucial for writing efficient code.`,
         completed: false,
@@ -61,9 +68,315 @@ An algorithm is a step-by-step procedure for solving a problem or accomplishing 
 - **Space Complexity**: How memory usage grows with input size
 
 ## Common Algorithms:
-- Sorting (Bubble, Quick, Merge)
+- Sorting (Bubble, Quick, Merge, Heap)
 - Searching (Linear, Binary)
-- Graph traversal (DFS, BFS)`,
+- Graph traversal (DFS, BFS)
+- Dynamic Programming
+- Greedy Algorithms`,
+        completed: false,
+      },
+      {
+        id: "cs-4",
+        title: "Artificial Intelligence Fundamentals",
+        notes: `# Artificial Intelligence Fundamentals
+
+## What is AI?
+Artificial Intelligence is the simulation of human intelligence by machines. It involves creating algorithms that can learn, reason, and make decisions.
+
+## Key AI Concepts:
+1. **Machine Learning**: Systems that learn from data
+   - Supervised Learning (labeled data)
+   - Unsupervised Learning (unlabeled data)
+   - Reinforcement Learning (reward-based)
+
+2. **Neural Networks**: Inspired by biological neurons
+   - Deep Learning
+   - Convolutional Neural Networks (CNNs)
+   - Recurrent Neural Networks (RNNs)
+
+3. **Natural Language Processing (NLP)**:
+   - Text analysis and generation
+   - Language translation
+   - Sentiment analysis
+
+## Applications:
+- Image recognition
+- Voice assistants
+- Autonomous vehicles
+- Recommendation systems
+- Medical diagnosis
+
+## Popular AI Frameworks:
+- TensorFlow
+- PyTorch
+- Scikit-learn
+- Keras`,
+        completed: false,
+      },
+      {
+        id: "cs-5",
+        title: "Machine Learning Basics",
+        notes: `# Machine Learning Basics
+
+## Types of Machine Learning:
+
+### 1. Supervised Learning
+Training data includes correct answers (labels)
+- **Classification**: Categorizing data (spam detection)
+- **Regression**: Predicting continuous values (house prices)
+
+### 2. Unsupervised Learning
+Finding patterns in unlabeled data
+- **Clustering**: Grouping similar items
+- **Dimensionality Reduction**: Simplifying data
+
+### 3. Reinforcement Learning
+Learning through trial and error with rewards
+
+## Key Algorithms:
+- Linear Regression
+- Logistic Regression
+- Decision Trees
+- Random Forests
+- K-Nearest Neighbors (KNN)
+- Support Vector Machines (SVM)
+- K-Means Clustering
+
+## ML Workflow:
+1. Data Collection
+2. Data Preprocessing
+3. Feature Engineering
+4. Model Selection
+5. Training
+6. Evaluation
+7. Deployment
+
+## Important Metrics:
+- Accuracy
+- Precision & Recall
+- F1-Score
+- Confusion Matrix`,
+        completed: false,
+      },
+      {
+        id: "cs-6",
+        title: "Deep Learning & Neural Networks",
+        notes: `# Deep Learning & Neural Networks
+
+## What is Deep Learning?
+A subset of machine learning using neural networks with multiple layers to learn complex patterns.
+
+## Neural Network Components:
+- **Input Layer**: Receives data
+- **Hidden Layers**: Process and transform data
+- **Output Layer**: Produces predictions
+- **Activation Functions**: ReLU, Sigmoid, Tanh
+- **Weights & Biases**: Learnable parameters
+
+## Types of Neural Networks:
+
+### 1. Feedforward Neural Networks (FNN)
+Basic architecture where data flows in one direction
+
+### 2. Convolutional Neural Networks (CNN)
+Specialized for image processing
+- Convolution layers
+- Pooling layers
+- Used in computer vision
+
+### 3. Recurrent Neural Networks (RNN)
+Process sequential data
+- LSTM (Long Short-Term Memory)
+- GRU (Gated Recurrent Unit)
+- Used in NLP and time series
+
+### 4. Transformer Models
+Modern architecture for NLP
+- Self-attention mechanism
+- BERT, GPT, T5
+
+## Training Concepts:
+- Backpropagation
+- Gradient Descent
+- Learning Rate
+- Batch Size
+- Epochs
+- Overfitting & Underfitting
+
+## Regularization Techniques:
+- Dropout
+- L1/L2 Regularization
+- Batch Normalization`,
+        completed: false,
+      },
+      {
+        id: "cs-7",
+        title: "Data Structures & Algorithms (DSA)",
+        notes: `# Data Structures & Algorithms (DSA)
+
+## Why DSA Matters:
+Essential for technical interviews, competitive programming, and writing efficient code.
+
+## Core Data Structures:
+
+### Arrays & Strings
+- Fixed vs Dynamic arrays
+- Two-pointer technique
+- Sliding window
+- String manipulation
+
+### Linked Lists
+- Singly vs Doubly linked
+- Fast & slow pointer
+- Cycle detection
+- Reversal techniques
+
+### Stacks & Queues
+- LIFO & FIFO principles
+- Applications: Expression evaluation, BFS/DFS
+- Monotonic stack/queue
+
+### Trees
+- Binary Trees
+- Binary Search Trees (BST)
+- AVL Trees (balanced)
+- Tree traversals: Inorder, Preorder, Postorder
+- Level-order traversal
+
+### Graphs
+- Adjacency matrix vs list
+- DFS (Depth-First Search)
+- BFS (Breadth-First Search)
+- Dijkstra's algorithm
+- Topological sort
+
+### Heaps
+- Min-Heap & Max-Heap
+- Priority Queue
+- Heap sort
+
+### Hash Tables
+- Hash functions
+- Collision resolution
+- Applications
+
+## Essential Algorithms:
+
+### Sorting
+- Bubble Sort: O(n²)
+- Merge Sort: O(n log n)
+- Quick Sort: O(n log n) average
+- Heap Sort: O(n log n)
+
+### Searching
+- Binary Search: O(log n)
+- Linear Search: O(n)
+
+### Dynamic Programming
+- Memoization
+- Tabulation
+- Common problems: Fibonacci, Knapsack, LCS
+
+### Greedy Algorithms
+- Activity selection
+- Huffman coding
+- Minimum spanning tree
+
+### Divide & Conquer
+- Merge sort
+- Quick sort
+- Binary search
+
+## Big O Notation:
+- O(1): Constant
+- O(log n): Logarithmic
+- O(n): Linear
+- O(n log n): Linearithmic
+- O(n²): Quadratic
+- O(2ⁿ): Exponential`,
+        completed: false,
+      },
+      {
+        id: "cs-8",
+        title: "Advanced DSA Problem Solving",
+        notes: `# Advanced DSA Problem Solving
+
+## Problem-Solving Patterns:
+
+### 1. Two Pointers
+Used for array/string problems
+- Pair sum in sorted array
+- Remove duplicates
+- Container with most water
+
+### 2. Sliding Window
+For contiguous subarrays
+- Maximum sum subarray
+- Longest substring without repeating chars
+- Minimum window substring
+
+### 3. Fast & Slow Pointers
+Linked list cycle detection
+- Floyd's cycle detection
+- Finding middle element
+
+### 4. Merge Intervals
+- Overlapping intervals
+- Insert interval
+- Meeting rooms
+
+### 5. Cyclic Sort
+- Find missing number
+- Find duplicate number
+
+### 6. In-place Reversal of Linked List
+- Reverse entire list
+- Reverse sublist
+- Palindrome check
+
+### 7. Tree BFS/DFS
+- Level order traversal
+- Zigzag traversal
+- Path sum problems
+
+### 8. Graph Algorithms
+- Island problems
+- Clone graph
+- Course schedule
+
+### 9. Dynamic Programming Patterns
+- Fibonacci pattern
+- 0/1 Knapsack
+- Unbounded knapsack
+- Longest common subsequence
+- Palindromic subsequence
+
+### 10. Backtracking
+- Permutations
+- Combinations
+- Subset problems
+- N-Queens
+
+## Interview Tips:
+1. Clarify the problem
+2. Think of edge cases
+3. Discuss brute force first
+4. Optimize step by step
+5. Write clean code
+6. Test with examples
+7. Analyze time & space complexity
+
+## Common Interview Problems:
+- Reverse Linked List
+- Valid Parentheses
+- Binary Tree Traversals
+- Two Sum / Three Sum
+- Longest Palindromic Substring
+- Merge K Sorted Lists
+- Implement LRU Cache
+- Word Search
+- Course Schedule
+- Number of Islands`,
         completed: false,
       },
     ],

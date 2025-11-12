@@ -1,4 +1,4 @@
-import { Layout } from "@/components/Layout";
+import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { subjects } from "@/data/subjects";
