@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Subjects from "./pages/Subjects";
 import Chapters from "./pages/Chapters";
 import Topics from "./pages/Topics";
+import Doubts from "./pages/Doubts";
 import UserProfile from "./pages/UserProfile";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
@@ -31,10 +32,11 @@ const App = () => (
                   <Layout>
                     <Routes>
                       <Route path="/" element={<Home />} />
-                      <Route path="/subjects/:subjectId" element={<Subjects />} />
-                      <Route path="/chapters/:chapterId" element={<Chapters />} />
-                      <Route path="/topics/:topicId" element={<Topics />} />
-                      <Route path="/profile" element={<UserProfile />} />
+            <Route path="/subjects/:subjectId" element={<Subjects />} />
+            <Route path="/chapters/:chapterId" element={<Chapters />} />
+            <Route path="/topics/:topicId" element={<Topics />} />
+            <Route path="/doubts" element={<Doubts />} />
+            <Route path="/profile" element={<UserProfile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Layout>
