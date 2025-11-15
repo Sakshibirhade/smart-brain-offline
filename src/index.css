@@ -36,16 +36,18 @@ All colors MUST be HSL.
     --input: 214 32% 91%;
     --ring: 221 83% 53%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%), hsl(199 89% 48%));
     --gradient-secondary: linear-gradient(135deg, hsl(199 89% 48%), hsl(199 89% 68%));
     --gradient-hero: linear-gradient(180deg, hsl(221 83% 53% / 0.05), hsl(221 83% 53% / 0));
+    --gradient-card: linear-gradient(145deg, hsl(221 83% 53% / 0.03), hsl(199 89% 48% / 0.03));
     
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --shadow-glow: 0 0 20px hsl(221 83% 53% / 0.3);
+    --shadow-sm: 0 1px 2px 0 hsl(221 83% 53% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(221 83% 53% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(221 83% 53% / 0.1);
+    --shadow-glow: 0 0 30px hsl(221 83% 53% / 0.4);
+    --shadow-card: 0 2px 8px -1px hsl(221 83% 53% / 0.08);
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -87,7 +89,14 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .app-container {
+    @apply max-w-md mx-auto;
   }
 }
 

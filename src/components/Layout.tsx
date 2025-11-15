@@ -3,15 +3,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Car, ScanLine, MapPin, User, LogOut } from "lucide-react";
 import NavLinkBottom from "./NavLinkBottom";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [user, setUser] = useState<SupabaseUser | null>(null);
 
   useEffect(() => {
@@ -63,6 +66,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </Link>
           
           <div className="flex items-center gap-2">
+            <LanguageSelector />
             <ThemeToggle />
             <Button
               variant="ghost"
@@ -81,13 +85,13 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="container px-4 py-6">{children}</main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg">
         <div className="container flex items-center justify-around h-16 px-4">
-          <NavLinkBottom to="/" icon={Home} label="Home" active={location.pathname === "/"} />
-          <NavLinkBottom to="/book-slot" icon={Car} label="Book" active={location.pathname === "/book-slot"} />
-          <NavLinkBottom to="/scan" icon={ScanLine} label="Scan" active={location.pathname === "/scan"} />
-          <NavLinkBottom to="/track-car" icon={MapPin} label="Track" active={location.pathname === "/track-car"} />
-          <NavLinkBottom to="/profile" icon={User} label="Profile" active={location.pathname === "/profile"} />
+          <NavLinkBottom to="/" icon={Home} label={t("home")} active={location.pathname === "/"} />
+          <NavLinkBottom to="/book-slot" icon={Car} label={t("book")} active={location.pathname === "/book-slot"} />
+          <NavLinkBottom to="/scan" icon={ScanLine} label={t("scan")} active={location.pathname === "/scan"} />
+          <NavLinkBottom to="/track-car" icon={MapPin} label={t("track")} active={location.pathname === "/track-car"} />
+          <NavLinkBottom to="/profile" icon={User} label={t("profile")} active={location.pathname === "/profile"} />
         </div>
       </nav>
     </div>
