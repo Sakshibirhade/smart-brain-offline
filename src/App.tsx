@@ -13,6 +13,7 @@ import Subjects from "./pages/Subjects";
 import Chapters from "./pages/Chapters";
 import Topics from "./pages/Topics";
 import Doubts from "./pages/Doubts";
+import Progress from "./pages/Progress";
 import UserProfile from "./pages/UserProfile";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/chapters/:chapterId" element={<Chapters />} />
             <Route path="/topics/:topicId" element={<Topics />} />
             <Route path="/doubts" element={<Doubts />} />
+            <Route path="/progress" element={<Progress />} />
             <Route path="/profile" element={<UserProfile />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
