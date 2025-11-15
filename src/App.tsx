@@ -4,16 +4,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Dashboard from "./pages/Dashboard";
-import Subjects from "./pages/Subjects";
-import SubjectDetail from "./pages/SubjectDetail";
-import ChapterView from "./pages/ChapterView";
-import Quiz from "./pages/Quiz";
-import Assistant from "./pages/Assistant";
-import Games from "./pages/Games";
-import Profile from "./pages/Profile";
-import Auth from "./pages/Auth";
-import CareerCounseling from "./pages/CareerCounseling";
+import Home from "./pages/Home";
+import BookSlot from "./pages/BookSlot";
+import ScanQR from "./pages/ScanQR";
+import TrackCar from "./pages/TrackCar";
+import UserProfile from "./pages/UserProfile";
+import PhoneAuth from "./pages/PhoneAuth";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,16 +23,13 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/subjects" element={<Subjects />} />
-            <Route path="/subjects/:id" element={<SubjectDetail />} />
-            <Route path="/subjects/:id/chapter/:chapterId" element={<ChapterView />} />
-            <Route path="/quiz/:quizId" element={<Quiz />} />
-            <Route path="/assistant" element={<Assistant />} />
-            <Route path="/career" element={<CareerCounseling />} />
-            <Route path="/games" element={<Games />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/phone-auth" element={<PhoneAuth />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/book-slot" element={<BookSlot />} />
+            <Route path="/scan" element={<ScanQR />} />
+            <Route path="/track-car" element={<TrackCar />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/profile" element={<UserProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
