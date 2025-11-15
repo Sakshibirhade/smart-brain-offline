@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, Car, ScanLine, MapPin, User, LogOut } from "lucide-react";
+import { Home, TrendingUp, MessageCircle, User, LogOut, Brain } from "lucide-react";
 import NavLinkBottom from "./NavLinkBottom";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
@@ -21,15 +21,15 @@ export default function Layout({ children }: { children: ReactNode }) {
     // Check authentication
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (!session && location.pathname !== "/phone-auth") {
-        navigate("/phone-auth");
+      if (!session && location.pathname !== "/auth") {
+        navigate("/auth");
       }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      if (!session && location.pathname !== "/phone-auth") {
-        navigate("/phone-auth");
+      if (!session && location.pathname !== "/auth") {
+        navigate("/auth");
       }
     });
 
@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         title: "Logged out",
         description: "You've been successfully logged out",
       });
-      navigate("/phone-auth");
+      navigate("/auth");
     }
   };
 
@@ -60,9 +60,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="container flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-              <Car className="w-6 h-6 text-primary-foreground" />
+              <Brain className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">SmartPark Pro</span>
+            <span className="text-xl font-bold">Smart Brain</span>
           </Link>
           
           <div className="flex items-center gap-2">
@@ -88,9 +88,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg">
         <div className="container flex items-center justify-around h-16 px-4">
           <NavLinkBottom to="/" icon={Home} label={t("home")} active={location.pathname === "/"} />
-          <NavLinkBottom to="/book-slot" icon={Car} label={t("book")} active={location.pathname === "/book-slot"} />
-          <NavLinkBottom to="/scan" icon={ScanLine} label={t("scan")} active={location.pathname === "/scan"} />
-          <NavLinkBottom to="/track-car" icon={MapPin} label={t("track")} active={location.pathname === "/track-car"} />
+          <NavLinkBottom to="/progress" icon={TrendingUp} label={t("progress")} active={location.pathname === "/progress"} />
+          <NavLinkBottom to="/doubts" icon={MessageCircle} label={t("doubts")} active={location.pathname === "/doubts"} />
           <NavLinkBottom to="/profile" icon={User} label={t("profile")} active={location.pathname === "/profile"} />
         </div>
       </nav>
