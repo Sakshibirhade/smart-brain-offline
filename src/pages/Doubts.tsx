@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, MessageSquare, Send, Clock } from "lucide-react";
+import { Loader2, MessageSquare, Send, Clock, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Doubt {
@@ -51,6 +51,30 @@ export default function Doubts() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (doubtId: string) => {
+    try {
+      const { error } = await supabase
+        .from("doubts")
+        .delete()
+        .eq("id", doubtId);
+
+      if (error) throw error;
+
+      toast({
+        title: t("success"),
+        description: "Question deleted successfully",
+      });
+
+      await loadDoubts();
+    } catch (error: any) {
+      toast({
+        title: t("error"),
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -179,6 +203,14 @@ export default function Doubts() {
                       </Badge>
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(doubt.id)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
               </CardHeader>
               {doubt.answer && (
