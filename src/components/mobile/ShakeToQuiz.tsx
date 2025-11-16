@@ -14,34 +14,54 @@ interface Question {
 
 const quizQuestions: Question[] = [
   {
-    question: "What is the powerhouse of the cell?",
-    options: ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic Reticulum"],
+    question: "What is the capital of France?",
+    options: ["London", "Paris", "Berlin", "Madrid"],
     correctAnswer: 1,
   },
   {
-    question: "What is the process by which plants make food?",
-    options: ["Respiration", "Photosynthesis", "Digestion", "Fermentation"],
+    question: "Who painted the Mona Lisa?",
+    options: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"],
     correctAnswer: 1,
   },
   {
-    question: "What is DNA's full form?",
-    options: [
-      "Deoxyribonucleic Acid",
-      "Dinitrogen Acid",
-      "Double Nucleic Acid",
-      "Dynamic Nuclear Acid",
-    ],
-    correctAnswer: 0,
-  },
-  {
-    question: "Which organ pumps blood throughout the body?",
-    options: ["Lungs", "Liver", "Heart", "Kidney"],
+    question: "What is the largest planet in our solar system?",
+    options: ["Mars", "Saturn", "Jupiter", "Neptune"],
     correctAnswer: 2,
   },
   {
-    question: "What is the largest organ in the human body?",
-    options: ["Heart", "Liver", "Skin", "Brain"],
+    question: "Which year did World War II end?",
+    options: ["1943", "1944", "1945", "1946"],
     correctAnswer: 2,
+  },
+  {
+    question: "What is the smallest country in the world?",
+    options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+    correctAnswer: 1,
+  },
+  {
+    question: "Who wrote 'Romeo and Juliet'?",
+    options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+    correctAnswer: 1,
+  },
+  {
+    question: "What is the longest river in the world?",
+    options: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+    correctAnswer: 1,
+  },
+  {
+    question: "How many continents are there?",
+    options: ["5", "6", "7", "8"],
+    correctAnswer: 2,
+  },
+  {
+    question: "What is the currency of Japan?",
+    options: ["Yuan", "Won", "Yen", "Baht"],
+    correctAnswer: 2,
+  },
+  {
+    question: "Who invented the telephone?",
+    options: ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Benjamin Franklin"],
+    correctAnswer: 1,
   },
 ];
 
