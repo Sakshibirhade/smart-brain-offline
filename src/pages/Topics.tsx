@@ -5,10 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowLeft, Clock, Award } from "lucide-react";
+import { ArrowLeft, Clock, Award, Microscope } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useToast } from "@/hooks/use-toast";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { CellDiagram } from "@/components/biology/CellDiagram";
+import { DigestiveSystem } from "@/components/biology/DigestiveSystem";
+import { HeartDiagram } from "@/components/biology/HeartDiagram";
 
 export default function Topics() {
   const { topicId } = useParams();
@@ -130,6 +133,27 @@ export default function Topics() {
           </Badge>
         )}
       </div>
+
+      {/* Biology Visualizations */}
+      {topic.chapters?.subjects?.name === "Biology" && (
+        <Card className="glass-effect shadow-card border-2 border-primary/30">
+          <CardContent className="pt-6 space-y-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow">
+                <Microscope className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Interactive Visualization</h3>
+                <p className="text-sm text-muted-foreground">Explore biological concepts visually</p>
+              </div>
+            </div>
+            
+            {topic.name.toLowerCase().includes("cell") && <CellDiagram />}
+            {topic.name.toLowerCase().includes("digest") && <DigestiveSystem />}
+            {(topic.name.toLowerCase().includes("heart") || topic.name.toLowerCase().includes("circulat")) && <HeartDiagram />}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardContent className="prose dark:prose-invert max-w-none pt-6">
