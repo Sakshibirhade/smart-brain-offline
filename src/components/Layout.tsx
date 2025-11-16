@@ -56,13 +56,13 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-40 border-b glass-effect shadow-sm">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-11 h-11 bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform duration-300">
               <Brain className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">Smart Brain</span>
+            <span className="text-xl font-display font-bold gradient-text">Smart Brain</span>
           </Link>
           
           <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               size="icon"
               onClick={handleLogout}
               title="Log out"
-              className="w-9 h-9"
+              className="w-9 h-9 hover:bg-destructive/10 hover:text-destructive transition-colors"
             >
               <LogOut className="w-5 h-5" />
             </Button>
@@ -85,7 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="container px-4 py-6">{children}</main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t glass-effect shadow-hover">
         <div className="container flex items-center justify-around h-16 px-4">
           <NavLinkBottom to="/" icon={Home} label={t("home")} active={location.pathname === "/"} />
           <NavLinkBottom to="/progress" icon={TrendingUp} label={t("progress")} active={location.pathname === "/progress"} />
