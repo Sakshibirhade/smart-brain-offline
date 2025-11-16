@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { BookOpen, Trophy, Target, TrendingUp } from "lucide-react";
+import { BookOpen, Trophy, Target, TrendingUp, Gamepad2 } from "lucide-react";
 
 export default function Home() {
   const [profile, setProfile] = useState<any>(null);
@@ -216,6 +216,28 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Quick Access to Games */}
+          <Card 
+            className="glass-effect shadow-card card-hover cursor-pointer border-2 border-border/50 hover:border-primary/40 animate-fade-up overflow-hidden"
+            onClick={() => navigate("/games")}
+          >
+            <div className="h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"></div>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-glow animate-float">
+                  <Gamepad2 className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold gradient-text mb-1">Fun Games! 🎮</h3>
+                  <p className="text-muted-foreground">Play offline learning games anytime!</p>
+                </div>
+              </div>
+              <Button className="w-full mt-4 shadow-md" size="lg">
+                Play Now! 🚀
+              </Button>
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
