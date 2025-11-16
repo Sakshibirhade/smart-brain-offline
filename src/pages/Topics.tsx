@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +15,12 @@ import { HeartDiagram } from "@/components/biology/HeartDiagram";
 import { DNAStructure } from "@/components/biology/DNAStructure";
 import { Photosynthesis } from "@/components/biology/Photosynthesis";
 import { RespiratorySystem } from "@/components/biology/RespiratorySystem";
+
+// Lazy load chemistry components
+const AtomStructure = lazy(() => import("@/components/chemistry/AtomStructure"));
+const PeriodicTable = lazy(() => import("@/components/chemistry/PeriodicTable"));
+const ChemicalBonding = lazy(() => import("@/components/chemistry/ChemicalBonding"));
+const PHScale = lazy(() => import("@/components/chemistry/PHScale"));
 
 export default function Topics() {
   const { topicId } = useParams();
@@ -183,8 +189,8 @@ export default function Topics() {
         )}
       </div>
 
-      {/* Biology Visualizations */}
-      {topic.chapters?.subjects?.name === "Biology" && (
+      {/* Biology and Chemistry Visualizations */}
+      {(topic.chapters?.subjects?.name === "Biology" || topic.chapters?.subjects?.name === "Chemistry" || topic.chapters?.subjects?.name === "Science") && (
         <Card className="glass-effect shadow-card border-2 border-primary/30">
           <CardContent className="pt-6 space-y-6">
             <div className="flex items-center gap-3 mb-4">
@@ -193,16 +199,25 @@ export default function Topics() {
               </div>
               <div>
                 <h3 className="text-xl font-bold">Interactive Visualization</h3>
-                <p className="text-sm text-muted-foreground">Explore biological concepts visually</p>
+                <p className="text-sm text-muted-foreground">Explore concepts visually</p>
               </div>
             </div>
             
+            {/* Biology visualizations */}
             {topic.name.toLowerCase().includes("cell") && <CellDiagram />}
             {topic.name.toLowerCase().includes("digest") && <DigestiveSystem />}
             {(topic.name.toLowerCase().includes("heart") || topic.name.toLowerCase().includes("circulat")) && <HeartDiagram />}
             {(topic.name.toLowerCase().includes("dna") || topic.name.toLowerCase().includes("gene")) && <DNAStructure />}
             {(topic.name.toLowerCase().includes("photo") || topic.name.toLowerCase().includes("plant")) && <Photosynthesis />}
             {(topic.name.toLowerCase().includes("respirat") || topic.name.toLowerCase().includes("breath") || topic.name.toLowerCase().includes("lung")) && <RespiratorySystem />}
+            
+            {/* Chemistry visualizations */}
+            <Suspense fallback={<div>Loading...</div>}>
+              {(topic.name.toLowerCase().includes("atom") || topic.name.toLowerCase().includes("structure of atom")) && <AtomStructure />}
+              {(topic.name.toLowerCase().includes("periodic") || topic.name.toLowerCase().includes("classification")) && <PeriodicTable />}
+              {topic.name.toLowerCase().includes("bonding") && <ChemicalBonding />}
+              {(topic.name.toLowerCase().includes("ph") || topic.name.toLowerCase().includes("acid") || topic.name.toLowerCase().includes("base")) && <PHScale />}
+            </Suspense>
           </CardContent>
         </Card>
       )}
