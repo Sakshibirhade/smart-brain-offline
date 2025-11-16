@@ -2,11 +2,12 @@ import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, Camera, Upload, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Camera, Upload, Search, Loader2 } from "lucide-react";
 import { InteractiveWord } from "./InteractiveWord";
 import { InteractiveFormula } from "./InteractiveFormula";
 import { InteractiveDiagram } from "./InteractiveDiagram";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface InteractiveBookReaderProps {
   bookId: string;
@@ -18,6 +19,8 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
   const [highlightedText, setHighlightedText] = useState("");
   const [searchResults, setSearchResults] = useState(0);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [solution, setSolution] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const totalPages = 10;
 
@@ -29,13 +32,46 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
-        toast.success("Image uploaded! You can now analyze your math problem.");
+      reader.onloadend = async () => {
+        const imageData = reader.result as string;
+        setUploadedImage(imageData);
+        setSolution(null);
+        
+        // Automatically analyze the image
+        setIsAnalyzing(true);
+        try {
+          const { data, error } = await supabase.functions.invoke('solve-math-problem', {
+            body: { imageData }
+          });
+
+          if (error) {
+            console.error('Error solving math problem:', error);
+            if (error.message.includes('429')) {
+              toast.error("Rate limit exceeded. Please try again in a moment.");
+            } else if (error.message.includes('402')) {
+              toast.error("AI usage limit reached. Please add credits to continue.");
+            } else {
+              toast.error("Failed to analyze the problem. Please try again.");
+            }
+            return;
+          }
+
+          if (data?.solution) {
+            setSolution(data.solution);
+            toast.success("Problem solved! Check the solution below.");
+          } else {
+            toast.error("Could not solve the problem. Please try a clearer image.");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          toast.error("An error occurred while analyzing the image.");
+        } finally {
+          setIsAnalyzing(false);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -101,12 +137,24 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
             <Card className="glass-effect border-2 border-primary/20 p-4">
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg">Scan Your Math Problem</h3>
+                <p className="text-sm text-muted-foreground">
+                  Take a photo or upload an image of your math problem, and AI will solve it step-by-step!
+                </p>
                 <div className="flex gap-4">
-                  <Button onClick={handleCameraClick} className="gap-2">
+                  <Button 
+                    onClick={handleCameraClick} 
+                    className="gap-2"
+                    disabled={isAnalyzing}
+                  >
                     <Camera className="w-4 h-4" />
                     Take Photo
                   </Button>
-                  <Button onClick={handleCameraClick} variant="outline" className="gap-2">
+                  <Button 
+                    onClick={handleCameraClick} 
+                    variant="outline" 
+                    className="gap-2"
+                    disabled={isAnalyzing}
+                  >
                     <Upload className="w-4 h-4" />
                     Upload from Gallery
                   </Button>
@@ -119,9 +167,59 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
                   onChange={handleImageUpload}
                   className="hidden"
                 />
+                
                 {uploadedImage && (
-                  <div className="mt-4">
-                    <img src={uploadedImage} alt="Uploaded math problem" className="rounded-lg max-h-64 object-contain" />
+                  <div className="mt-4 space-y-4">
+                    <div className="relative">
+                      <img 
+                        src={uploadedImage} 
+                        alt="Uploaded math problem" 
+                        className="rounded-lg max-h-64 object-contain border-2 border-border w-full"
+                      />
+                      {isAnalyzing && (
+                        <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
+                          <div className="text-center space-y-2">
+                            <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                            <p className="text-sm font-medium">Analyzing problem...</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {solution && !isAnalyzing && (
+                      <div className="space-y-4 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
+                        <div>
+                          <h4 className="font-semibold text-lg text-primary mb-2">Problem:</h4>
+                          <p className="text-foreground">{solution.problem}</p>
+                        </div>
+
+                        <div>
+                          <h4 className="font-semibold text-lg text-primary mb-2">Solution Steps:</h4>
+                          <ol className="space-y-2">
+                            {solution.steps?.map((step: string, index: number) => (
+                              <li key={index} className="flex gap-2">
+                                <span className="font-semibold text-primary min-w-[2rem]">
+                                  {index + 1}.
+                                </span>
+                                <span>{step}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+
+                        <div className="pt-4 border-t border-primary/20">
+                          <h4 className="font-semibold text-lg text-primary mb-2">Final Answer:</h4>
+                          <p className="text-lg font-semibold text-foreground">{solution.answer}</p>
+                        </div>
+
+                        {solution.explanation && (
+                          <div className="pt-4 border-t border-primary/20">
+                            <h4 className="font-semibold text-lg text-primary mb-2">Explanation:</h4>
+                            <p className="text-foreground">{solution.explanation}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
