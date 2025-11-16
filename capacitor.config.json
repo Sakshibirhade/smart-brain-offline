@@ -1,0 +1,14 @@
+{
+  "appId": "app.lovable.5b4e7e1c4fcc4d5e81f9fd7bb69a8de2",
+  "appName": "smart-brain-offline",
+  "webDir": "dist",
+  "server": {
+    "url": "https://5b4e7e1c-4fcc-4d5e-81f9-fd7bb69a8de2.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
