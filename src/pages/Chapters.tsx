@@ -69,31 +69,36 @@ export default function Chapters() {
   }
 
   return (
-    <div className="space-y-6 pb-20">
-      <div className="flex items-center gap-4">
+    <div className="space-y-8 pb-20">
+      <div className="flex items-center gap-4 animate-fade-in">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => navigate(-1)}
+          className="hover:scale-110 transition-transform"
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <div>
-          <p className="text-sm text-muted-foreground">{chapter.subjects?.name}</p>
-          <h1 className="text-2xl font-bold">{chapter.name}</h1>
-          <p className="text-muted-foreground">{chapter.description}</p>
+        <div className="flex-1">
+          <p className="text-sm text-muted-foreground font-medium">{chapter.subjects?.name}</p>
+          <h1 className="text-3xl font-display font-bold gradient-text">{chapter.name}</h1>
+          {chapter.description && (
+            <p className="text-muted-foreground mt-1">{chapter.description}</p>
+          )}
         </div>
       </div>
 
-      <Card>
+      <Card className="glass-effect shadow-card border-2 border-border/50 animate-scale-in">
         <CardHeader>
-          <CardTitle>{t("topics")}</CardTitle>
-          <CardDescription>
-            {topics.filter((t) => getTopicProgress(t.id)?.completed).length} of {topics.length} completed
+          <CardTitle className="text-2xl">{t("topics")}</CardTitle>
+          <CardDescription className="text-base">
+            <span className="font-semibold text-primary">
+              {topics.filter((t) => getTopicProgress(t.id)?.completed).length}
+            </span> of {topics.length} completed
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-3">
-          {topics.map((topic) => {
+        <CardContent className="space-y-4">
+          {topics.map((topic, index) => {
             const topicProgress = getTopicProgress(topic.id);
             const isCompleted = topicProgress?.completed;
 
@@ -101,27 +106,37 @@ export default function Chapters() {
               <div
                 key={topic.id}
                 onClick={() => navigate(`/topics/${topic.id}`)}
-                className="flex items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-accent transition-colors"
+                className="group flex items-center justify-between p-5 rounded-xl border-2 border-border/50 cursor-pointer hover:border-primary/40 glass-effect card-hover transition-all duration-300 animate-fade-up"
+                style={{animationDelay: `${index * 0.1}s`}}
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    isCompleted ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-md transition-all duration-300 ${
+                    isCompleted 
+                      ? 'bg-gradient-primary text-primary-foreground shadow-glow' 
+                      : 'bg-muted group-hover:bg-primary/10'
                   }`}>
                     {isCompleted ? (
-                      <CheckCircle2 className="w-6 h-6" />
+                      <CheckCircle2 className="w-6 h-6 animate-scale-in" />
                     ) : (
-                      <span className="font-semibold">{topic.order_index}</span>
+                      <span className="font-bold text-lg">{topic.order_index}</span>
                     )}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold">{topic.name}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="text-xs">
+                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{topic.name}</h3>
+                    <div className="flex items-center gap-3 mt-2">
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs font-medium ${
+                          topic.difficulty === 'easy' ? 'border-success/50 text-success' :
+                          topic.difficulty === 'medium' ? 'border-accent/50 text-accent' :
+                          'border-destructive/50 text-destructive'
+                        }`}
+                      >
                         {t(topic.difficulty)}
                       </Badge>
                       {topic.estimated_time && (
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                        <span className="text-sm text-muted-foreground flex items-center gap-1.5">
+                          <Clock className="w-4 h-4" />
                           {topic.estimated_time} min
                         </span>
                       )}
@@ -133,9 +148,11 @@ export default function Chapters() {
           })}
 
           {topics.length === 0 && (
-            <p className="text-center text-muted-foreground py-8">
-              No topics available yet.
-            </p>
+            <div className="text-center py-12 animate-fade-in">
+              <p className="text-muted-foreground text-lg">
+                No topics available yet.
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>
