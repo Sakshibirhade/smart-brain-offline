@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, Camera, Upload, Search, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Camera, Upload, Search, Loader2, Sparkles } from "lucide-react";
 import { InteractiveWord } from "./InteractiveWord";
 import { InteractiveFormula } from "./InteractiveFormula";
 import { InteractiveDiagram } from "./InteractiveDiagram";
@@ -21,6 +21,8 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [solution, setSolution] = useState<any>(null);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const totalPages = 10;
 
@@ -81,8 +83,9 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
     fileInputRef.current?.click();
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchQuery.trim()) {
+      // First, highlight existing text
       setHighlightedText(searchQuery.toLowerCase());
       const contentElement = document.querySelector('.book-content');
       if (contentElement) {
@@ -92,12 +95,35 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
         
         if (matches > 0) {
           toast.success(`Found ${matches} match${matches > 1 ? 'es' : ''} for "${searchQuery}"`);
-          // Scroll to first match
           const firstHighlight = document.querySelector('.search-highlight');
           firstHighlight?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-          toast.error(`No matches found for "${searchQuery}"`);
         }
+      }
+
+      // Get AI explanation for the search term
+      setIsSearching(true);
+      setAiExplanation(null);
+      try {
+        const subject = bookId === "2" ? "science" : "geography";
+        const { data, error } = await supabase.functions.invoke('explain-topic', {
+          body: { topic: searchQuery, subject }
+        });
+
+        if (error) {
+          console.error('Error getting explanation:', error);
+          toast.error("Could not get AI explanation. Try again.");
+          return;
+        }
+
+        if (data?.explanation) {
+          setAiExplanation(data.explanation);
+          toast.success("AI explanation ready!");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        toast.error("An error occurred while searching.");
+      } finally {
+        setIsSearching(false);
       }
     }
   };
@@ -106,6 +132,7 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
     setSearchQuery("");
     setHighlightedText("");
     setSearchResults(0);
+    setAiExplanation(null);
   };
 
   const highlightText = (text: string) => {
@@ -344,31 +371,58 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
             </h1>
             
             {/* Search Bar for Science */}
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Search about digestive system..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1"
-                />
-                <Button onClick={handleSearch} className="gap-2">
-                  <Search className="w-4 h-4" />
-                  Search
-                </Button>
-                {highlightedText && (
-                  <Button onClick={clearSearch} variant="outline">
-                    Clear
+            <Card className="glass-effect border-2 border-primary/20 p-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    AI-Powered Search
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Search for any topic about the human body - organs, systems, cells, nerves, anything!
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Try: heart, neurons, blood cells, lungs..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    className="flex-1"
+                    disabled={isSearching}
+                  />
+                  <Button onClick={handleSearch} className="gap-2" disabled={isSearching}>
+                    {isSearching ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Search className="w-4 h-4" />
+                    )}
+                    Search
                   </Button>
+                  {highlightedText && (
+                    <Button onClick={clearSearch} variant="outline">
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                {searchResults > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Found {searchResults} match{searchResults > 1 ? 'es' : ''} in current page
+                  </p>
+                )}
+                {aiExplanation && (
+                  <div className="mt-4 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
+                    <h4 className="font-semibold text-lg text-primary mb-2 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      AI Explanation
+                    </h4>
+                    <div className="text-foreground whitespace-pre-line">
+                      {aiExplanation}
+                    </div>
+                  </div>
                 )}
               </div>
-              {searchResults > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Found {searchResults} match{searchResults > 1 ? 'es' : ''}
-                </p>
-              )}
-            </div>
+            </Card>
 
             <div className="space-y-4 text-lg leading-relaxed book-content">
               <p>
@@ -473,31 +527,58 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
             </h1>
             
             {/* Search Bar for Geography */}
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Search about world geography..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1"
-                />
-                <Button onClick={handleSearch} className="gap-2">
-                  <Search className="w-4 h-4" />
-                  Search
-                </Button>
-                {highlightedText && (
-                  <Button onClick={clearSearch} variant="outline">
-                    Clear
+            <Card className="glass-effect border-2 border-primary/20 p-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    AI-Powered Search
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Search for any geography topic - countries, rivers, mountains, climates, anything!
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Try: Himalayas, Amazon River, climate zones..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    className="flex-1"
+                    disabled={isSearching}
+                  />
+                  <Button onClick={handleSearch} className="gap-2" disabled={isSearching}>
+                    {isSearching ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Search className="w-4 h-4" />
+                    )}
+                    Search
                   </Button>
+                  {highlightedText && (
+                    <Button onClick={clearSearch} variant="outline">
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                {searchResults > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Found {searchResults} match{searchResults > 1 ? 'es' : ''} in current page
+                  </p>
+                )}
+                {aiExplanation && (
+                  <div className="mt-4 p-4 bg-primary/5 rounded-lg border-2 border-primary/20">
+                    <h4 className="font-semibold text-lg text-primary mb-2 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      AI Explanation
+                    </h4>
+                    <div className="text-foreground whitespace-pre-line">
+                      {aiExplanation}
+                    </div>
+                  </div>
                 )}
               </div>
-              {searchResults > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Found {searchResults} match{searchResults > 1 ? 'es' : ''}
-                </p>
-              )}
-            </div>
+            </Card>
 
             <div className="space-y-4 text-lg leading-relaxed book-content">
               <p>

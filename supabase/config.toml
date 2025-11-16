@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.solve-math-problem]
 verify_jwt = false
+
+[functions.explain-topic]
+verify_jwt = false
