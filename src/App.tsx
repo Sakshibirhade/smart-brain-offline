@@ -16,6 +16,7 @@ import Doubts from "./pages/Doubts";
 import Progress from "./pages/Progress";
 import UserProfile from "./pages/UserProfile";
 import Games from "./pages/Games";
+import Books from "./pages/Books";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
 const App = () => (
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/progress" element={<Progress />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/games" element={<Games />} />
+            <Route path="/books" element={<Books />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Layout>
