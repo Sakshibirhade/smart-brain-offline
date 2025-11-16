@@ -347,7 +347,136 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
             <div className="space-y-2">
               <div className="flex gap-2">
                 <Input
-                  placeholder="Search about human body systems..."
+                  placeholder="Search about digestive system..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="flex-1"
+                />
+                <Button onClick={handleSearch} className="gap-2">
+                  <Search className="w-4 h-4" />
+                  Search
+                </Button>
+                {highlightedText && (
+                  <Button onClick={clearSearch} variant="outline">
+                    Clear
+                  </Button>
+                )}
+              </div>
+              {searchResults > 0 && (
+                <p className="text-sm text-muted-foreground">
+                  Found {searchResults} match{searchResults > 1 ? 'es' : ''}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-4 text-lg leading-relaxed book-content">
+              <p>
+                {highlightText("The ")}{" "}
+                <InteractiveWord
+                  word="digestive system"
+                  definition="A group of organs working together to convert food into energy and nutrients"
+                  example="The digestive system includes the mouth, stomach, and intestines"
+                />
+                {highlightText(" is responsible for breaking down food into nutrients that your body can absorb and use for energy, growth, and cell repair.")}
+              </p>
+
+              <p className="mt-6">
+                {highlightText("Digestion begins in the ")}{" "}
+                <InteractiveWord
+                  word="mouth"
+                  definition="The opening through which food enters the body, where mechanical and chemical digestion begins"
+                  example="Your teeth break down food while saliva starts chemical digestion"
+                />
+                {highlightText(", where ")}{" "}
+                <InteractiveWord
+                  word="saliva"
+                  definition="A liquid produced by glands in the mouth that contains enzymes to begin breaking down food"
+                  example="Saliva contains amylase, which starts breaking down starches"
+                />
+                {highlightText(" helps break down food.")}
+              </p>
+
+              <InteractiveDiagram
+                title="Digestive System Diagram"
+                description="Click to explore the human digestive system"
+                content={
+                  <div className="space-y-4">
+                    <div className="bg-background/50 p-6 rounded-lg">
+                      <div className="grid grid-cols-1 gap-4">
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <h4 className="font-semibold text-primary">1. Mouth</h4>
+                          <p className="text-sm mt-1">Food enters and chewing begins. Saliva starts breaking down starches.</p>
+                        </div>
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <h4 className="font-semibold text-primary">2. Esophagus</h4>
+                          <p className="text-sm mt-1">Muscular tube that moves food to the stomach through peristalsis.</p>
+                        </div>
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <h4 className="font-semibold text-primary">3. Stomach</h4>
+                          <p className="text-sm mt-1">Churns food and mixes it with gastric acid to break down proteins.</p>
+                        </div>
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <h4 className="font-semibold text-primary">4. Small Intestine</h4>
+                          <p className="text-sm mt-1">Where most nutrient absorption occurs. About 20 feet long!</p>
+                        </div>
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <h4 className="font-semibold text-primary">5. Large Intestine</h4>
+                          <p className="text-sm mt-1">Absorbs water and forms waste products for elimination.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              />
+
+              <p className="mt-6">
+                {highlightText("The ")}{" "}
+                <InteractiveWord
+                  word="stomach"
+                  definition="A muscular organ that holds and digests food using acid and enzymes"
+                  example="The stomach can hold about 1.5 liters of food and liquid"
+                />
+                {highlightText(" produces ")}{" "}
+                <InteractiveWord
+                  word="gastric acid"
+                  definition="A strong acid (hydrochloric acid) that kills bacteria and helps break down proteins"
+                  example="Gastric acid has a pH of about 1.5 to 3.5"
+                />
+                {highlightText(" to help digest food and kill harmful bacteria.")}
+              </p>
+
+              <p className="mt-6">
+                {highlightText("Most nutrients are absorbed in the ")}{" "}
+                <InteractiveWord
+                  word="small intestine"
+                  definition="A long, coiled tube where most digestion and nutrient absorption occurs"
+                  example="The small intestine has three parts: duodenum, jejunum, and ileum"
+                />
+                {highlightText(", which contains tiny finger-like projections called ")}{" "}
+                <InteractiveWord
+                  word="villi"
+                  definition="Small finger-like projections that increase surface area for nutrient absorption"
+                  example="Villi greatly increase the surface area of the small intestine"
+                />
+                {highlightText(" that increase the surface area for absorption.")}
+              </p>
+            </div>
+          </div>
+        );
+
+      case "3": // Social Studies - World Geography
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold gradient-text">
+              Chapter 1: Continents and Oceans
+            </h1>
+            
+            {/* Search Bar for Geography */}
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search about world geography..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -384,7 +513,7 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
                   definition="Vast bodies of salt water that cover most of Earth's surface"
                   example="The five oceans are Pacific, Atlantic, Indian, Arctic, and Southern"
                 />
-                .
+                {highlightText(".")}
               </p>
 
               <p className="mt-6">
@@ -439,7 +568,7 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
               />
 
               <p className="mt-6">
-                The{" "}
+                {highlightText("The ")}{" "}
                 <InteractiveWord
                   word="Pacific Ocean"
                   definition="The largest and deepest ocean on Earth"
