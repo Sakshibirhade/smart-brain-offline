@@ -3,14 +3,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Gamepad2, Brain, Sparkles, Target, Zap, Trophy, Rocket } from "lucide-react";
+import { Gamepad2, Brain, Sparkles, Target, Zap, Trophy, Rocket, Bird, Flame, Box } from "lucide-react";
 import { MemoryGame } from "@/components/games/MemoryGame";
 import { MathQuiz } from "@/components/games/MathQuiz";
 import { WordScramble } from "@/components/games/WordScramble";
 import { ColorMatch } from "@/components/games/ColorMatch";
 import { EndlessRunner } from "@/components/games/EndlessRunner";
+import { FlappyBird } from "@/components/games/FlappyBird";
+import { SpaceShooter } from "@/components/games/SpaceShooter";
+import { BrickBreaker } from "@/components/games/BrickBreaker";
 
-type GameType = "memory" | "math" | "word" | "color" | "runner" | null;
+type GameType = "memory" | "math" | "word" | "color" | "runner" | "flappy" | "space" | "brick" | null;
 
 export default function Games() {
   const [activeGame, setActiveGame] = useState<GameType>(null);
@@ -20,15 +23,39 @@ export default function Games() {
     {
       id: "runner" as GameType,
       title: "Endless Runner",
-      description: "Run, dodge obstacles & collect coins - Like Subway Surfers!",
+      description: "Run, dodge obstacles & collect coins!",
       icon: Rocket,
       color: "from-purple-500 to-indigo-600",
       difficulty: "Hard",
     },
     {
+      id: "flappy" as GameType,
+      title: "Flappy Bird",
+      description: "Tap to fly through the pipes!",
+      icon: Bird,
+      color: "from-cyan-500 to-blue-600",
+      difficulty: "Medium",
+    },
+    {
+      id: "space" as GameType,
+      title: "Space Shooter",
+      description: "Defend Earth from alien invaders!",
+      icon: Flame,
+      color: "from-red-500 to-pink-600",
+      difficulty: "Hard",
+    },
+    {
+      id: "brick" as GameType,
+      title: "Brick Breaker",
+      description: "Classic paddle and ball action!",
+      icon: Box,
+      color: "from-yellow-500 to-orange-600",
+      difficulty: "Medium",
+    },
+    {
       id: "memory" as GameType,
       title: "Memory Match",
-      description: "Find matching pairs and boost your memory!",
+      description: "Find matching pairs!",
       icon: Brain,
       color: "from-purple-500 to-pink-500",
       difficulty: "Easy",
@@ -36,7 +63,7 @@ export default function Games() {
     {
       id: "math" as GameType,
       title: "Math Challenge",
-      description: "Solve fun math problems as fast as you can!",
+      description: "Solve problems fast!",
       icon: Target,
       color: "from-blue-500 to-cyan-500",
       difficulty: "Medium",
@@ -44,7 +71,7 @@ export default function Games() {
     {
       id: "word" as GameType,
       title: "Word Scramble",
-      description: "Unscramble the letters to find the word!",
+      description: "Unscramble the letters!",
       icon: Sparkles,
       color: "from-green-500 to-emerald-500",
       difficulty: "Medium",
@@ -52,7 +79,7 @@ export default function Games() {
     {
       id: "color" as GameType,
       title: "Color Match",
-      description: "Match colors quickly before time runs out!",
+      description: "Match colors quickly!",
       icon: Zap,
       color: "from-orange-500 to-red-500",
       difficulty: "Easy",
@@ -72,6 +99,9 @@ export default function Games() {
           </Button>
         </div>
         {activeGame === "runner" && <EndlessRunner />}
+        {activeGame === "flappy" && <FlappyBird />}
+        {activeGame === "space" && <SpaceShooter />}
+        {activeGame === "brick" && <BrickBreaker />}
         {activeGame === "memory" && <MemoryGame />}
         {activeGame === "math" && <MathQuiz />}
         {activeGame === "word" && <WordScramble />}
