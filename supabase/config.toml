@@ -2,3 +2,6 @@ project_id = "bbhdgtcigensqaubxwjm"
 
 [functions.text-to-speech]
 verify_jwt = false
+
+[functions.solve-math-problem]
+verify_jwt = false
