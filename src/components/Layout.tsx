@@ -9,6 +9,8 @@ import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { ShakeToQuiz } from "./mobile/ShakeToQuiz";
+import { EyeProtection } from "./mobile/EyeProtection";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -80,6 +82,10 @@ export default function Layout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
+
+      {/* Mobile Features */}
+      <ShakeToQuiz />
+      <EyeProtection />
 
       {/* Main Content */}
       <main className="container px-4 py-6">{children}</main>
