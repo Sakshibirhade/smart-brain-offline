@@ -12,6 +12,9 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 import { CellDiagram } from "@/components/biology/CellDiagram";
 import { DigestiveSystem } from "@/components/biology/DigestiveSystem";
 import { HeartDiagram } from "@/components/biology/HeartDiagram";
+import { DNAStructure } from "@/components/biology/DNAStructure";
+import { Photosynthesis } from "@/components/biology/Photosynthesis";
+import { RespiratorySystem } from "@/components/biology/RespiratorySystem";
 
 export default function Topics() {
   const { topicId } = useParams();
@@ -151,6 +154,9 @@ export default function Topics() {
             {topic.name.toLowerCase().includes("cell") && <CellDiagram />}
             {topic.name.toLowerCase().includes("digest") && <DigestiveSystem />}
             {(topic.name.toLowerCase().includes("heart") || topic.name.toLowerCase().includes("circulat")) && <HeartDiagram />}
+            {(topic.name.toLowerCase().includes("dna") || topic.name.toLowerCase().includes("gene")) && <DNAStructure />}
+            {(topic.name.toLowerCase().includes("photo") || topic.name.toLowerCase().includes("plant")) && <Photosynthesis />}
+            {(topic.name.toLowerCase().includes("respirat") || topic.name.toLowerCase().includes("breath") || topic.name.toLowerCase().includes("lung")) && <RespiratorySystem />}
           </CardContent>
         </Card>
       )}
