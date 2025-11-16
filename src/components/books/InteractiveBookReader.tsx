@@ -15,6 +15,8 @@ interface InteractiveBookReaderProps {
 export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedText, setHighlightedText] = useState("");
+  const [searchResults, setSearchResults] = useState(0);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const totalPages = 10;
@@ -45,8 +47,45 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      toast.info(`Searching for: ${searchQuery}`);
+      setHighlightedText(searchQuery.toLowerCase());
+      const contentElement = document.querySelector('.book-content');
+      if (contentElement) {
+        const textContent = contentElement.textContent?.toLowerCase() || '';
+        const matches = (textContent.match(new RegExp(searchQuery.toLowerCase(), 'g')) || []).length;
+        setSearchResults(matches);
+        
+        if (matches > 0) {
+          toast.success(`Found ${matches} match${matches > 1 ? 'es' : ''} for "${searchQuery}"`);
+          // Scroll to first match
+          const firstHighlight = document.querySelector('.search-highlight');
+          firstHighlight?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          toast.error(`No matches found for "${searchQuery}"`);
+        }
+      }
     }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setHighlightedText("");
+    setSearchResults(0);
+  };
+
+  const highlightText = (text: string) => {
+    if (!highlightedText || !text) return text;
+    
+    const parts = text.split(new RegExp(`(${highlightedText})`, 'gi'));
+    return parts.map((part, index) => {
+      if (part.toLowerCase() === highlightedText.toLowerCase()) {
+        return (
+          <mark key={index} className="search-highlight bg-yellow-300 dark:bg-yellow-600 rounded px-1 animate-pulse">
+            {part}
+          </mark>
+        );
+      }
+      return part;
+    });
   };
 
   const getBookContent = () => {
@@ -88,7 +127,7 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
               </div>
             </Card>
 
-            <div className="space-y-4 text-lg leading-relaxed">
+            <div className="space-y-4 text-lg leading-relaxed book-content">
               <p>
                 Algebra is a branch of{" "}
                 <InteractiveWord
@@ -207,132 +246,41 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
             </h1>
             
             {/* Search Bar for Science */}
-            <div className="flex gap-2">
-              <Input
-                placeholder="Search about human body systems..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="flex-1"
-              />
-              <Button onClick={handleSearch} className="gap-2">
-                <Search className="w-4 h-4" />
-                Search
-              </Button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search about human body systems..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="flex-1"
+                />
+                <Button onClick={handleSearch} className="gap-2">
+                  <Search className="w-4 h-4" />
+                  Search
+                </Button>
+                {highlightedText && (
+                  <Button onClick={clearSearch} variant="outline">
+                    Clear
+                  </Button>
+                )}
+              </div>
+              {searchResults > 0 && (
+                <p className="text-sm text-muted-foreground">
+                  Found {searchResults} match{searchResults > 1 ? 'es' : ''}
+                </p>
+              )}
             </div>
 
-            <div className="space-y-4 text-lg leading-relaxed">
+            <div className="space-y-4 text-lg leading-relaxed book-content">
               <p>
-                The{" "}
-                <InteractiveWord
-                  word="digestive system"
-                  definition="A system of organs that breaks down food into nutrients your body can use"
-                  example="The digestive system includes the stomach, intestines, and liver"
-                />
-                {" "}is responsible for breaking down food into{" "}
-                <InteractiveWord
-                  word="nutrients"
-                  definition="Substances that provide nourishment essential for growth and health"
-                  example="Proteins, carbohydrates, and vitamins are nutrients"
-                />
-                {" "}that your body can absorb.
-              </p>
-
-              <p className="mt-6">
-                The process begins in the{" "}
-                <InteractiveWord
-                  word="mouth"
-                  definition="The opening through which food enters the body, where digestion begins"
-                  example="Saliva in the mouth starts breaking down food"
-                />
-                {" "}where{" "}
-                <InteractiveWord
-                  word="saliva"
-                  definition="A watery substance produced in the mouth that helps break down food"
-                  example="Saliva contains enzymes that start digesting starches"
-                />
-                {" "}begins to break down food.
-              </p>
-
-              <InteractiveDiagram
-                title="Digestive System Diagram"
-                description="Click to explore the organs of the digestive system"
-                content={
-                  <div className="space-y-4">
-                    <div className="bg-background/50 p-6 rounded-lg">
-                      <div className="space-y-4">
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <h4 className="font-semibold text-primary">1. Mouth & Esophagus</h4>
-                          <p className="text-sm mt-1">Food is chewed and swallowed, traveling down the esophagus</p>
-                        </div>
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <h4 className="font-semibold text-primary">2. Stomach</h4>
-                          <p className="text-sm mt-1">Acids and enzymes break down food into a liquid mixture</p>
-                        </div>
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <h4 className="font-semibold text-primary">3. Small Intestine</h4>
-                          <p className="text-sm mt-1">Nutrients are absorbed into the bloodstream</p>
-                        </div>
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <h4 className="font-semibold text-primary">4. Large Intestine</h4>
-                          <p className="text-sm mt-1">Water is absorbed and waste is prepared for elimination</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-              />
-
-              <p className="mt-6">
-                The{" "}
-                <InteractiveWord
-                  word="stomach"
-                  definition="A muscular organ that mixes food with digestive juices"
-                  example="The stomach produces acid to help digest proteins"
-                />
-                {" "}produces{" "}
-                <InteractiveWord
-                  word="gastric acid"
-                  definition="A strong acid that helps break down food and kill harmful bacteria"
-                  example="Gastric acid has a pH of about 1.5 to 3.5"
-                />
-                {" "}to help digest proteins and kill harmful bacteria.
-              </p>
-            </div>
-          </div>
-        );
-
-      case "3": // Social Studies - World Geography
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold gradient-text">
-              Chapter 1: Continents and Oceans
-            </h1>
-            
-            {/* Search Bar for Geography */}
-            <div className="flex gap-2">
-              <Input
-                placeholder="Search about world geography..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="flex-1"
-              />
-              <Button onClick={handleSearch} className="gap-2">
-                <Search className="w-4 h-4" />
-                Search
-              </Button>
-            </div>
-
-            <div className="space-y-4 text-lg leading-relaxed">
-              <p>
-                Earth is divided into seven{" "}
+                {highlightText("Earth is divided into seven ")}{" "}
                 <InteractiveWord
                   word="continents"
                   definition="Large continuous masses of land on Earth"
                   example="The seven continents are Asia, Africa, North America, South America, Antarctica, Europe, and Australia"
                 />
-                {" "}and five major{" "}
+                {highlightText(" and five major ")}{" "}
                 <InteractiveWord
                   word="oceans"
                   definition="Vast bodies of salt water that cover most of Earth's surface"
@@ -342,13 +290,13 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
               </p>
 
               <p className="mt-6">
-                The largest continent is{" "}
+                {highlightText("The largest continent is ")}{" "}
                 <InteractiveWord
                   word="Asia"
                   definition="The largest continent by both area and population"
                   example="Asia contains countries like China, India, and Japan"
                 />
-                , covering about 30% of Earth's land area.
+                {highlightText(", covering about 30% of Earth's land area.")}
               </p>
 
               <InteractiveDiagram
@@ -399,23 +347,23 @@ export const InteractiveBookReader = ({ bookId }: InteractiveBookReaderProps) =>
                   definition="The largest and deepest ocean on Earth"
                   example="The Pacific Ocean covers more area than all land on Earth combined"
                 />
-                {" "}is the largest ocean, covering more than 63 million square miles.
+                {highlightText(" is the largest ocean, covering more than 63 million square miles.")}
               </p>
 
               <p className="mt-6">
-                The{" "}
+                {highlightText("The ")}{" "}
                 <InteractiveWord
                   word="equator"
                   definition="An imaginary line around Earth's middle, dividing it into Northern and Southern hemispheres"
                   example="Countries on the equator have tropical climates year-round"
                 />
-                {" "}divides Earth into the Northern and Southern{" "}
+                {highlightText(" divides Earth into the Northern and Southern ")}{" "}
                 <InteractiveWord
                   word="hemispheres"
                   definition="Half of a sphere, or half of Earth"
                   example="The Northern Hemisphere contains most of Earth's land"
                 />
-                .
+                {highlightText(".")}
               </p>
             </div>
           </div>
