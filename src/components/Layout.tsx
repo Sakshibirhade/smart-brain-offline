@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, TrendingUp, MessageCircle, User, LogOut, Brain } from "lucide-react";
+import { Home, TrendingUp, MessageCircle, User, LogOut, Brain, Gamepad2 } from "lucide-react";
 import NavLinkBottom from "./NavLinkBottom";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
@@ -86,8 +86,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t glass-effect shadow-hover">
-        <div className="container flex items-center justify-around h-16 px-4">
+        <div className="container flex items-center justify-around h-16 px-2">
           <NavLinkBottom to="/" icon={Home} label={t("home")} active={location.pathname === "/"} />
+          <NavLinkBottom to="/games" icon={Gamepad2} label="Games" active={location.pathname === "/games"} />
           <NavLinkBottom to="/progress" icon={TrendingUp} label={t("progress")} active={location.pathname === "/progress"} />
           <NavLinkBottom to="/doubts" icon={MessageCircle} label={t("doubts")} active={location.pathname === "/doubts"} />
           <NavLinkBottom to="/profile" icon={User} label={t("profile")} active={location.pathname === "/profile"} />
