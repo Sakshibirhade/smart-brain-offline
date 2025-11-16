@@ -21,6 +21,7 @@ const AtomStructure = lazy(() => import("@/components/chemistry/AtomStructure"))
 const PeriodicTable = lazy(() => import("@/components/chemistry/PeriodicTable"));
 const ChemicalBonding = lazy(() => import("@/components/chemistry/ChemicalBonding"));
 const PHScale = lazy(() => import("@/components/chemistry/PHScale"));
+const ReactivitySeries = lazy(() => import("@/components/chemistry/ReactivitySeries"));
 
 export default function Topics() {
   const { topicId } = useParams();
@@ -217,6 +218,7 @@ export default function Topics() {
               {(topic.name.toLowerCase().includes("periodic") || topic.name.toLowerCase().includes("classification")) && <PeriodicTable />}
               {topic.name.toLowerCase().includes("bonding") && <ChemicalBonding />}
               {(topic.name.toLowerCase().includes("ph") || topic.name.toLowerCase().includes("acid") || topic.name.toLowerCase().includes("base")) && <PHScale />}
+              {(topic.name.toLowerCase().includes("reactivity") || topic.name.toLowerCase().includes("displacement") || topic.name.toLowerCase().includes("metal")) && <ReactivitySeries />}
             </Suspense>
           </CardContent>
         </Card>
