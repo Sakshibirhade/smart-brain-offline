@@ -21,6 +21,8 @@ export default function Topics() {
   const [topic, setTopic] = useState<any>(null);
   const [progress, setProgress] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [aiContent, setAiContent] = useState<string>("");
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { toast } = useToast();
@@ -28,6 +30,50 @@ export default function Topics() {
   useEffect(() => {
     loadTopic();
   }, [topicId]);
+
+  useEffect(() => {
+    if (topic && !topic.content && topic.chapters?.subjects?.name) {
+      generateContent();
+    }
+  }, [topic]);
+
+  const generateContent = async () => {
+    if (!topic) return;
+    
+    setIsGeneratingContent(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-topic-content', {
+        body: {
+          topicName: topic.name,
+          subjectName: topic.chapters?.subjects?.name,
+          difficulty: topic.difficulty || 'medium'
+        }
+      });
+
+      if (error) {
+        console.error('Error generating content:', error);
+        toast({
+          title: "Content Generation Failed",
+          description: "Unable to generate detailed content. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (data?.content) {
+        setAiContent(data.content);
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate content",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingContent(false);
+    }
+  };
 
   const loadTopic = async () => {
     try {
@@ -116,8 +162,8 @@ export default function Topics() {
           </p>
           <h1 className="text-2xl font-bold">{topic.name}</h1>
         </div>
-        {topic.content && (
-          <AudioPlayer text={topic.content} />
+        {(aiContent || topic.content) && (
+          <AudioPlayer text={aiContent || topic.content} />
         )}
       </div>
 
@@ -161,9 +207,44 @@ export default function Topics() {
         </Card>
       )}
 
-      <Card>
-        <CardContent className="prose dark:prose-invert max-w-none pt-6">
-          <ReactMarkdown>{topic.content || "Content coming soon..."}</ReactMarkdown>
+      {/* Main Content Section */}
+      <Card className="glass-effect shadow-card border-2">
+        <CardContent className="pt-6">
+          {isGeneratingContent ? (
+            <div className="space-y-4 animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow animate-pulse">
+                  <Microscope className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Generating Detailed Content...</h3>
+                  <p className="text-sm text-muted-foreground">Our AI is creating a comprehensive explanation for you</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="h-4 bg-muted/50 rounded animate-pulse w-full"></div>
+                <div className="h-4 bg-muted/50 rounded animate-pulse w-5/6"></div>
+                <div className="h-4 bg-muted/50 rounded animate-pulse w-4/6"></div>
+                <div className="h-4 bg-muted/50 rounded animate-pulse w-full"></div>
+                <div className="h-4 bg-muted/50 rounded animate-pulse w-3/4"></div>
+              </div>
+            </div>
+          ) : (
+            <div className="prose prose-lg dark:prose-invert max-w-none">
+              <ReactMarkdown>
+                {aiContent || topic.content || "Content coming soon..."}
+              </ReactMarkdown>
+            </div>
+          )}
+          
+          {aiContent && !isGeneratingContent && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Badge variant="outline">AI-Generated Content</Badge>
+                <span>This comprehensive explanation was created by AI to help you learn better</span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
