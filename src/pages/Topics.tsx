@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowLeft, Clock, Award } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useToast } from "@/hooks/use-toast";
+import { AudioPlayer } from "@/components/AudioPlayer";
 
 export default function Topics() {
   const { topicId } = useParams();
@@ -109,6 +110,9 @@ export default function Topics() {
           </p>
           <h1 className="text-2xl font-bold">{topic.name}</h1>
         </div>
+        {topic.content && (
+          <AudioPlayer text={topic.content} />
+        )}
       </div>
 
       <div className="flex gap-2">
