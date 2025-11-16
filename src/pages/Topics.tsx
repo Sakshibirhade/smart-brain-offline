@@ -23,6 +23,12 @@ const ChemicalBonding = lazy(() => import("@/components/chemistry/ChemicalBondin
 const PHScale = lazy(() => import("@/components/chemistry/PHScale"));
 const ReactivitySeries = lazy(() => import("@/components/chemistry/ReactivitySeries"));
 
+// Lazy load math components
+const NumberLine = lazy(() => import("@/components/math/NumberLine"));
+const FractionVisualizer = lazy(() => import("@/components/math/FractionVisualizer"));
+const GeometryShapes = lazy(() => import("@/components/math/GeometryShapes"));
+const MultiplicationTable = lazy(() => import("@/components/math/MultiplicationTable"));
+
 export default function Topics() {
   const { topicId } = useParams();
   const [topic, setTopic] = useState<any>(null);
@@ -190,8 +196,8 @@ export default function Topics() {
         )}
       </div>
 
-      {/* Biology and Chemistry Visualizations */}
-      {(topic.chapters?.subjects?.name === "Biology" || topic.chapters?.subjects?.name === "Chemistry" || topic.chapters?.subjects?.name === "Science") && (
+      {/* Biology, Chemistry, and Math Visualizations */}
+      {(topic.chapters?.subjects?.name === "Biology" || topic.chapters?.subjects?.name === "Chemistry" || topic.chapters?.subjects?.name === "Science" || topic.chapters?.subjects?.name === "Mathematics") && (
         <Card className="glass-effect shadow-card border-2 border-primary/30">
           <CardContent className="pt-6 space-y-6">
             <div className="flex items-center gap-3 mb-4">
@@ -219,6 +225,14 @@ export default function Topics() {
               {topic.name.toLowerCase().includes("bonding") && <ChemicalBonding />}
               {(topic.name.toLowerCase().includes("ph") || topic.name.toLowerCase().includes("acid") || topic.name.toLowerCase().includes("base")) && <PHScale />}
               {(topic.name.toLowerCase().includes("reactivity") || topic.name.toLowerCase().includes("displacement") || topic.name.toLowerCase().includes("metal")) && <ReactivitySeries />}
+            </Suspense>
+
+            {/* Math visualizations */}
+            <Suspense fallback={<div>Loading...</div>}>
+              {(topic.name.toLowerCase().includes("number") && (topic.name.toLowerCase().includes("line") || topic.name.toLowerCase().includes("integer") || topic.name.toLowerCase().includes("addition") || topic.name.toLowerCase().includes("subtract"))) && <NumberLine />}
+              {(topic.name.toLowerCase().includes("fraction") || topic.name.toLowerCase().includes("decimal")) && <FractionVisualizer />}
+              {(topic.name.toLowerCase().includes("geometry") || topic.name.toLowerCase().includes("shape") || topic.name.toLowerCase().includes("area") || topic.name.toLowerCase().includes("perimeter") || topic.name.toLowerCase().includes("circle") || topic.name.toLowerCase().includes("triangle") || topic.name.toLowerCase().includes("rectangle")) && <GeometryShapes />}
+              {(topic.name.toLowerCase().includes("multiplication") || topic.name.toLowerCase().includes("table")) && <MultiplicationTable />}
             </Suspense>
           </CardContent>
         </Card>
