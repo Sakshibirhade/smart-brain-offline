@@ -3,19 +3,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Gamepad2, Brain, Sparkles, Target, Zap, Trophy } from "lucide-react";
+import { Gamepad2, Brain, Sparkles, Target, Zap, Trophy, Rocket } from "lucide-react";
 import { MemoryGame } from "@/components/games/MemoryGame";
 import { MathQuiz } from "@/components/games/MathQuiz";
 import { WordScramble } from "@/components/games/WordScramble";
 import { ColorMatch } from "@/components/games/ColorMatch";
+import { EndlessRunner } from "@/components/games/EndlessRunner";
 
-type GameType = "memory" | "math" | "word" | "color" | null;
+type GameType = "memory" | "math" | "word" | "color" | "runner" | null;
 
 export default function Games() {
   const [activeGame, setActiveGame] = useState<GameType>(null);
   const { t } = useLanguage();
 
   const games = [
+    {
+      id: "runner" as GameType,
+      title: "Endless Runner",
+      description: "Run, dodge obstacles & collect coins - Like Subway Surfers!",
+      icon: Rocket,
+      color: "from-purple-500 to-indigo-600",
+      difficulty: "Hard",
+    },
     {
       id: "memory" as GameType,
       title: "Memory Match",
@@ -62,6 +71,7 @@ export default function Games() {
             ← Back to Games
           </Button>
         </div>
+        {activeGame === "runner" && <EndlessRunner />}
         {activeGame === "memory" && <MemoryGame />}
         {activeGame === "math" && <MathQuiz />}
         {activeGame === "word" && <WordScramble />}
