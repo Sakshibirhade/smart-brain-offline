@@ -8,6 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Brain, BookOpen } from "lucide-react";
+import { z } from "zod";
+
+const authSchema = z.object({
+  email: z.string().trim().email("Invalid email address").max(255, "Email too long"),
+  password: z.string().min(6, "Password must be at least 6 characters").max(100, "Password too long"),
+  fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name too long").optional(),
+});
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -40,9 +47,22 @@ export default function Auth() {
     setLoading(true);
 
     try {
+      // Validate inputs
+      const validationData = {
+        email: email.trim(),
+        password,
+        ...((!isLogin && fullName) ? { fullName: fullName.trim() } : {})
+      };
+      
+      const result = authSchema.safeParse(validationData);
+      if (!result.success) {
+        const errors = result.error.issues.map(err => err.message).join(", ");
+        throw new Error(errors);
+      }
+
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({
-          email,
+          email: validationData.email,
           password,
         });
         
@@ -54,12 +74,12 @@ export default function Auth() {
         });
       } else {
         const { error } = await supabase.auth.signUp({
-          email,
+          email: validationData.email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
             data: {
-              full_name: fullName,
+              full_name: validationData.fullName || '',
             },
           },
         });

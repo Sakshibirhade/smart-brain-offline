@@ -8,6 +8,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User as UserIcon, GraduationCap, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { z } from "zod";
+
+const profileSchema = z.object({
+  fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name too long"),
+  grade: z.number().int().min(1).max(12),
+  parentEmail: z.string().trim().email("Invalid email address").max(255, "Email too long").optional().or(z.literal("")),
+});
 
 export default function UserProfile() {
   const [profile, setProfile] = useState<any>(null);
@@ -46,6 +53,18 @@ export default function UserProfile() {
   const updateProfile = async () => {
     setLoading(true);
     try {
+      // Validate inputs
+      const validationResult = profileSchema.safeParse({
+        fullName: fullName.trim(),
+        grade: parseInt(grade),
+        parentEmail: parentEmail.trim(),
+      });
+      
+      if (!validationResult.success) {
+        const errors = validationResult.error.issues.map(err => err.message).join(", ");
+        throw new Error(errors);
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
@@ -53,9 +72,9 @@ export default function UserProfile() {
         .from("profiles")
         .upsert({
           id: user.id,
-          full_name: fullName,
-          grade: parseInt(grade),
-          parent_email: parentEmail,
+          full_name: validationResult.data.fullName,
+          grade: validationResult.data.grade,
+          parent_email: validationResult.data.parentEmail || null,
         });
 
       if (error) throw error;

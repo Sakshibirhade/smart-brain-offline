@@ -8,6 +8,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, MessageSquare, Send, Clock, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { z } from "zod";
+
+const questionSchema = z.object({
+  question: z.string().trim().min(10, "Question must be at least 10 characters").max(2000, "Question must be less than 2000 characters"),
+  context: z.string().max(500, "Context must be less than 500 characters").optional(),
+});
 
 interface Doubt {
   id: string;
@@ -84,6 +90,16 @@ export default function Doubts() {
 
     setSubmitting(true);
     try {
+      // Validate input
+      const validationResult = questionSchema.safeParse({ 
+        question: question.trim() 
+      });
+      
+      if (!validationResult.success) {
+        const errors = validationResult.error.issues.map(err => err.message).join(", ");
+        throw new Error(errors);
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
 
@@ -91,7 +107,7 @@ export default function Doubts() {
       const { data: aiData, error: aiError } = await supabase.functions.invoke(
         "solve-doubt",
         {
-          body: { question: question.trim() },
+          body: { question: validationResult.data.question },
         }
       );
 
@@ -100,7 +116,7 @@ export default function Doubts() {
       // Save to database
       const { error: dbError } = await supabase.from("doubts").insert({
         user_id: user.id,
-        question: question.trim(),
+        question: validationResult.data.question,
         answer: aiData.answer,
         status: "answered",
       });

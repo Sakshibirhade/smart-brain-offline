@@ -11,7 +11,25 @@ serve(async (req) => {
   }
 
   try {
-    const { question, context } = await req.json();
+    const body = await req.json();
+    const { question, context } = body;
+    
+    // Validate inputs
+    if (!question || typeof question !== 'string') {
+      throw new Error("Question is required and must be a string");
+    }
+    if (question.trim().length < 3) {
+      throw new Error("Question must be at least 3 characters long");
+    }
+    if (question.length > 2000) {
+      throw new Error("Question must be less than 2000 characters");
+    }
+    if (context && typeof context !== 'string') {
+      throw new Error("Context must be a string");
+    }
+    if (context && context.length > 500) {
+      throw new Error("Context must be less than 500 characters");
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {

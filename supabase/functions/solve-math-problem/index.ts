@@ -11,11 +11,25 @@ serve(async (req) => {
   }
 
   try {
-    const { imageData } = await req.json();
+    const body = await req.json();
+    const { imageData } = body;
     
-    if (!imageData) {
+    // Validate inputs
+    if (!imageData || typeof imageData !== 'string') {
       return new Response(
-        JSON.stringify({ error: "Image data is required" }),
+        JSON.stringify({ error: "Image data is required and must be a string" }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    if (imageData.length > 10485760) { // 10MB limit
+      return new Response(
+        JSON.stringify({ error: "Image data too large (max 10MB)" }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    if (!imageData.startsWith('data:image/')) {
+      return new Response(
+        JSON.stringify({ error: "Invalid image data format" }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

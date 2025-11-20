@@ -1,13 +1,1 @@
 project_id = "bbhdgtcigensqaubxwjm"
-
-[functions.text-to-speech]
-verify_jwt = false
-
-[functions.solve-math-problem]
-verify_jwt = false
-
-[functions.explain-topic]
-verify_jwt = false
-
-[functions.generate-topic-content]
-verify_jwt = false
