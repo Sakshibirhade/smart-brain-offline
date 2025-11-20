@@ -12,7 +12,25 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, subject } = await req.json();
+    const body = await req.json();
+    const { topic, subject } = body;
+    
+    // Validate inputs
+    if (!topic || typeof topic !== 'string') {
+      throw new Error("Topic is required and must be a string");
+    }
+    if (topic.trim().length < 2) {
+      throw new Error("Topic must be at least 2 characters long");
+    }
+    if (topic.length > 200) {
+      throw new Error("Topic must be less than 200 characters");
+    }
+    if (!subject || typeof subject !== 'string') {
+      throw new Error("Subject is required and must be a string");
+    }
+    if (!['science', 'geography'].includes(subject)) {
+      throw new Error("Subject must be 'science' or 'geography'");
+    }
 
     console.log('Explaining topic:', topic, 'for subject:', subject);
 

@@ -11,10 +11,21 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voice = 'alloy' } = await req.json()
+    const body = await req.json()
+    const { text, voice = 'alloy' } = body
 
-    if (!text) {
-      throw new Error('Text is required')
+    // Validate inputs
+    if (!text || typeof text !== 'string') {
+      throw new Error('Text is required and must be a string')
+    }
+    if (text.trim().length === 0) {
+      throw new Error('Text cannot be empty')
+    }
+    if (text.length > 4096) {
+      throw new Error('Text must be less than 4096 characters')
+    }
+    if (voice && !['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer'].includes(voice)) {
+      throw new Error('Invalid voice selection')
     }
 
     console.log('Generating speech for text length:', text.length)

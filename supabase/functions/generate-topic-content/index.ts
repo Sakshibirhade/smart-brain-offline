@@ -11,7 +11,28 @@ serve(async (req) => {
   }
 
   try {
-    const { topicName, subjectName, difficulty } = await req.json();
+    const body = await req.json();
+    const { topicName, subjectName, difficulty } = body;
+    
+    // Validate inputs
+    if (!topicName || typeof topicName !== 'string') {
+      throw new Error("Topic name is required and must be a string");
+    }
+    if (topicName.trim().length < 2) {
+      throw new Error("Topic name must be at least 2 characters long");
+    }
+    if (topicName.length > 200) {
+      throw new Error("Topic name must be less than 200 characters");
+    }
+    if (!subjectName || typeof subjectName !== 'string') {
+      throw new Error("Subject name is required and must be a string");
+    }
+    if (subjectName.length > 100) {
+      throw new Error("Subject name must be less than 100 characters");
+    }
+    if (difficulty && !['easy', 'medium', 'hard', 'intermediate'].includes(difficulty)) {
+      throw new Error("Invalid difficulty level");
+    }
     
     console.log('Generating content for:', { topicName, subjectName, difficulty });
 
