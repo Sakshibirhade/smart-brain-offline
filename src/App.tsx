@@ -20,7 +20,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider attribute="class" defaultTheme="light" storageKey="vite-ui-theme">
       <TooltipProvider>
         <LanguageProvider>
           <Toaster />
