@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Motion } from "@capacitor/motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,32 +73,65 @@ export const ShakeToQuiz = () => {
   const [shakeEnabled, setShakeEnabled] = useState(false);
 
   useEffect(() => {
-    let handler: any;
+    let lastX = 0, lastY = 0, lastZ = 0;
+    let lastTime = Date.now();
 
-    const startShakeDetection = async () => {
-      try {
-        // Request permission and start listening for shake events
-        await Motion.addListener("accel", (event) => {
-          const { x, y, z } = event.acceleration;
-          const totalAcceleration = Math.sqrt(x * x + y * y + z * z);
+    const handleMotion = (event: DeviceMotionEvent) => {
+      const current = event.accelerationIncludingGravity;
+      if (!current || current.x === null || current.y === null || current.z === null) return;
 
-          // If acceleration is high enough, it's a shake!
-          if (totalAcceleration > 25) {
-            triggerQuiz();
-          }
-        });
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastTime;
 
-        setShakeEnabled(true);
-        console.log("Shake detection started");
-      } catch (error) {
-        console.error("Error setting up shake detection:", error);
+      if (timeDiff > 100) {
+        const deltaX = Math.abs(current.x - lastX);
+        const deltaY = Math.abs(current.y - lastY);
+        const deltaZ = Math.abs(current.z - lastZ);
+
+        const acceleration = deltaX + deltaY + deltaZ;
+
+        // If acceleration is high enough, it's a shake!
+        if (acceleration > 25) {
+          triggerQuiz();
+        }
+
+        lastX = current.x;
+        lastY = current.y;
+        lastZ = current.z;
+        lastTime = currentTime;
+      }
+    };
+
+    const startShakeDetection = () => {
+      if (typeof DeviceMotionEvent !== 'undefined') {
+        // Request permission for iOS 13+
+        if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+          (DeviceMotionEvent as any).requestPermission()
+            .then((response: string) => {
+              if (response === 'granted') {
+                window.addEventListener('devicemotion', handleMotion);
+                setShakeEnabled(true);
+                console.log("Shake detection started");
+              }
+            })
+            .catch((error: Error) => {
+              console.error("Error requesting motion permission:", error);
+            });
+        } else {
+          // Non-iOS or older iOS
+          window.addEventListener('devicemotion', handleMotion);
+          setShakeEnabled(true);
+          console.log("Shake detection started");
+        }
+      } else {
+        console.log("DeviceMotion not supported");
       }
     };
 
     startShakeDetection();
 
     return () => {
-      Motion.removeAllListeners();
+      window.removeEventListener('devicemotion', handleMotion);
     };
   }, []);
 
